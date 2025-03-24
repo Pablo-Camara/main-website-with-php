@@ -6,17 +6,17 @@ require_once './core/User.php';
 require_once './core/AuthToken.php';
 
 try {
-    $email = $_GET['email'] ?? null; //TODO: change to POST
-    // GET password too (POST)
-    // if email is not provided return json with success false and message
-    if (!$email) {
-        echo json_encode(['success' => false, 'message' => 'Email is required']);
+    $email = $_POST['email'] ?? null;
+    $password = $_POST['password'] ?? null;
+    // if email or password is not provided return json with success false and message
+    if (!$email || !$password) {
+        echo json_encode(['success' => false, 'message' => 'Email and password are required']);
         exit;
     }
     
     $user = User::getUserByEmail($email);
-
-    if ($user) { //TODO: check password
+ 
+    if ($user && password_verify($password, $user['password_hash'])) {
         $token = AuthToken::create($user['id']);
         if (!$token) {
             echo json_encode(['success' => false, 'message' => 'Could not login']);
