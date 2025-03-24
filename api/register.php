@@ -1,0 +1,69 @@
+<?php
+//TODO: test
+header("Content-Type: application/json");
+require_once './config/debug.php';
+require_once './core/Database.php';
+require_once './core/User.php';
+
+try {
+    $firstName = $_POST['first_name'] ?? null;
+    $lastName = $_POST['last_name'] ?? null;
+    $email = $_POST['email'] ?? null;
+    $emailConfirm = $_POST['email_confirm'] ?? null;
+    $password = $_POST['password'] ?? null;
+    $passwordConfirm = $_POST['password_confirm'] ?? null;
+    $newsletterConsent = $_POST['newsletter_consent'] ?? 0;
+
+    //validations
+    $errors = [];
+
+    if (User::getUserByEmail($email)) {
+        $errors['email'] = 'Email is already registered';
+    }
+
+    if ($email !== $emailConfirm) {
+        $errors['email_confirm'] = 'Emails do not match';
+    }
+
+    if (strlen($firstName) > 50 || strpos($firstName,' ')!== false) {
+        $errors['first_name'] = 'First name is required and must be less than 50 characters and without spaces';
+    }
+    if (strlen($lastName) > 50 || strpos($lastName,' ')!== false) {
+        $errors['last_name'] = 'Last name is required and must be less than 50 characters and without spaces';
+    }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = 'Email is required and must be a valid email address';
+    }
+    if (strlen($password) < 8) {
+        $errors['password'] = 'Password is required and must be at least 8 characters long';
+    }
+
+    if (!empty($errors)) {
+        echo json_encode(['success' => false, 'errors' => $errors]);
+        exit;
+    }
+
+    $db = Database::getInstance()->getConnection();
+    $registerSql = <<<SQL
+        INSERT INTO users (first_name, last_name, email, password_hash, newsletter_consent)
+        VALUES (:first_name, :last_name, :email, :password_hash, :newsletter_consent)
+    SQL;
+
+    $query = $db->prepare($registerSql);
+    $registerResult = $query->execute([
+        'first_name' => $firstName,
+        'last_name' => $lastName,
+        'email' => $email,
+        'password_hash' => password_hash($password, PASSWORD_BCRYPT),
+        'newsletter_consent' => $newsletterConsent
+    ]);
+
+    if (!$registerResult) {
+        echo json_encode(['success' => false, 'error' => 'Could not register user']);
+        exit;
+    }
+    // TODO: create auth token and return it
+    echo json_encode(['success' => true, 'message' => 'User registered successfully']);
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'error' => 'Something went wrong could not register user']);
+}

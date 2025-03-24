@@ -1,0 +1,11 @@
+<?php
+// TODO: change this file name from db.README to db.php and fill up the credentials in prod server
+// TODO: use env variables ideally
+// TODO: never send db.php to git, this db.README is a structure example
+return [
+    'host' => 'your db host name',
+    'dbuser' => 'your db user name',
+    'dbname' => 'your db name',
+    'dbpass' => 'your db password',
+    'charset' => 'utf8mb4'
+];
