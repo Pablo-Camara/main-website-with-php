@@ -49,7 +49,12 @@ try {
     }
 
     if (!empty($errors)) {
-        echo json_encode(['success' => false, 'errors' => $errors]);
+        $token = AuthToken::create($user['id']);
+        echo json_encode([
+            'success' => false,
+            'token' => $token,
+            'errors' => $errors
+        ]);
         exit;
     }
 
