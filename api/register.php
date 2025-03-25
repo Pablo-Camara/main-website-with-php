@@ -21,7 +21,7 @@ try {
         $errors['email'] = 'Email is already registered';
     }
 
-    if ($email !== $emailConfirm) {
+    if ($emailConfirm !== $email) {
         $errors['email_confirm'] = 'Emails do not match';
     }
 
@@ -36,6 +36,10 @@ try {
     }
     if (strlen($password) < 8) {
         $errors['password'] = 'Password is required and must be at least 8 characters long';
+    }
+
+    if ($passwordConfirm !== $password) {
+        $errors['password_confirm'] = 'Passwords do not match';
     }
 
     if (!empty($errors)) {
