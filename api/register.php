@@ -25,10 +25,10 @@ try {
         $errors['email_confirm'] = 'Emails do not match';
     }
 
-    if (strlen($firstName) > 50 || strpos($firstName,' ')!== false) {
+    if (!(strlen($firstName) > 50 || strpos($firstName,' ')!== false)) {
         $errors['first_name'] = 'First name is required and must be less than 50 characters and without spaces';
     }
-    if (strlen($lastName) > 50 || strpos($lastName,' ')!== false) {
+    if (!(strlen($lastName) > 50 || strpos($lastName,' ')!== false)) {
         $errors['last_name'] = 'Last name is required and must be less than 50 characters and without spaces';
     }
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
