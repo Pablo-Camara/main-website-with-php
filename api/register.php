@@ -1,5 +1,4 @@
 <?php
-//TODO: test
 header("Content-Type: application/json");
 require_once './config/debug.php';
 require_once './core/Database.php';
