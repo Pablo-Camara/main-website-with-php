@@ -3,6 +3,7 @@ header("Content-Type: application/json");
 require_once './config/debug.php';
 require_once './core/Database.php';
 require_once './core/User.php';
+require_once './core/AuthToken.php';
 
 try {
     $firstName = $_POST['first_name'] ?? null;
