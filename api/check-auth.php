@@ -25,5 +25,6 @@ echo json_encode(['success' => true, 'user' => [
     'first_name' => $userData['first_name'],
     'last_name' => $userData['last_name'],
     'email' => $userData['email'],
-    'newsletter_consent' => $userData['newsletter_consent']
+    'newsletter_consent' => $userData['newsletter_consent'],
+    'email_confirmed' => $userData['email_confirmed']
 ]]);
