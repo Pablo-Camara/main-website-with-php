@@ -25,4 +25,19 @@ SQL);
         setcookie('auth_token', $token, time() + 3600, '/', '', false, true);
         return true;
     }
+
+    public static function unsetAuthTokenCookie() {
+        setcookie('auth_token', '', time() - 3600, '/', '', false, true);
+    }
+
+    public static function validateToken($token) {
+        $db = Database::getInstance()->getConnection();
+        $query = $db->prepare(<<<SQL
+        SELECT user_id FROM auth_tokens
+        WHERE token = :token AND expires_at > NOW()
+SQL);
+        $query->execute(['token' => $token]);
+        $result = $query->fetch();
+        return $result['user_id'] ?? null;
+    }
 }
