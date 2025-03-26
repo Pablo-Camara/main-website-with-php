@@ -54,10 +54,9 @@ try {
         // confirmation email will be sent to the user through other platform since
         // we are using free host that does not support sending emails natively
         // TODO: find alternative to send emails through a free api or service
-        $token = AuthToken::create($user['id']);
+        $result = AuthToken::createAndSetCookie($user['id']);
         echo json_encode([
-            'success' => false,
-            'token' => $token,
+            'success' => $result,
             'errors' => $errors
         ]);
         exit;

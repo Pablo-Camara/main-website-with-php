@@ -17,14 +17,13 @@ try {
     $user = User::getUserByEmail($email);
  
     if ($user && password_verify($password, $user['password_hash'])) {
-        $token = AuthToken::create($user['id']);
-        if (!$token) {
+        $result = AuthToken::createAndSetCookie($user['id']);
+        if (!$result) {
             echo json_encode(['success' => false, 'message' => 'Could not login']);
             exit;
         }
         echo json_encode([
-            'success' => true, 
-            'token' => $token
+            'success' => true
         ]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Email or password is incorrect']);

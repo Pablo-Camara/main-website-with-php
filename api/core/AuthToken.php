@@ -16,4 +16,13 @@ SQL);
         }
         return $token;
     }
+
+    public static function createAndSetCookie($userId) {
+        $token = self::create($userId);
+        if (!$token) {
+            return false;
+        }
+        setcookie('auth_token', $token, time() + 3600, '/', '', false, true);
+        return true;
+    }
 }
