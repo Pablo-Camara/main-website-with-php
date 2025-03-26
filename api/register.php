@@ -49,14 +49,8 @@ try {
     }
 
     if (!empty($errors)) {
-        // we will auth the user even if not email confirmed
-        // website will have restrictions for unconfirmed emails
-        // confirmation email will be sent to the user through other platform since
-        // we are using free host that does not support sending emails natively
-        // TODO: find alternative to send emails through a free api or service
-        $result = AuthToken::createAndSetCookie($user['id']);
         echo json_encode([
-            'success' => $result,
+            'success' => false,
             'errors' => $errors
         ]);
         exit;
@@ -81,6 +75,15 @@ try {
         echo json_encode(['success' => false, 'error' => 'Could not register user']);
         exit;
     }
+
+    // get last id of inserted row
+    $lastId = $db->lastInsertId();
+    // we will auth the user even if not email confirmed
+    // website will have restrictions for unconfirmed emails
+    // confirmation email will be sent to the user through other platform since
+    // we are using free host that does not support sending emails natively
+    // TODO: find alternative to send emails through a free api or service
+    $result = AuthToken::createAndSetCookie($lastId);
     // TODO: create auth token and return it
     echo json_encode(['success' => true, 'message' => 'User registered successfully']);
 } catch (Exception $e) {
