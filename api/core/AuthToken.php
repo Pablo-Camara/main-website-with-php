@@ -4,7 +4,7 @@ require_once 'Database.php';
 class AuthToken {
     public static function create($userId) {
         $db = Database::getInstance()->getConnection();
-        $token = bin2hex(random_bytes(255));
+        $token = bin2hex(random_bytes(127)); // Generates a 254-character string
         $expiresAt = date('Y-m-d H:i:s', strtotime('+1 hour'));
         // insert auth_tokens record
         $query = $db->prepare(<<<SQL
